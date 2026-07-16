@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
+  Alert,
   StyleSheet,
   Pressable,
 } from "react-native";
@@ -44,10 +45,28 @@ export default function HomeScreen() {
     loadNotes();
   }, []);
 
-  const onLogout = async () => {
+  const completeLogout = async () => {
     setLogoutLoading(true);
-    await signOut();
-    router.replace("/sign-in");
+
+    try {
+      await signOut();
+      router.replace("/sign-in");
+    } catch {
+      Alert.alert("Logout failed", "Please try again.");
+    } finally {
+      setLogoutLoading(false);
+    }
+  };
+
+  const onLogout = () => {
+    Alert.alert(
+      "Log out?",
+      "You will need to sign in again to access your notes.",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Log out", style: "destructive", onPress: completeLogout },
+      ],
+    );
   };
 
   return (
