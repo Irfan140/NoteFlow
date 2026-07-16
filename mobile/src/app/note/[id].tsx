@@ -12,11 +12,18 @@ import {
 import { useEffect, useState } from "react";
 import { useApi } from "../../lib/api";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  noteSchema,
+  routeIdSchema,
+  summaryResponseSchema,
+  type Note,
+} from "../../schemas/note";
 
 export default function NoteDetail() {
   const { id } = useLocalSearchParams();
   const api = useApi();
   const router = useRouter();
+  const noteId = routeIdSchema.parse(id);
 
   const [note, setNote] = useState<Note | null>(null);
   const [loading, setLoading] = useState(true);
@@ -27,8 +34,8 @@ export default function NoteDetail() {
 
   const load = async () => {
     try {
-      const res = await api.get<Note>(`/notes/${id}`);
-      setNote(res.data);
+      const res = await api.get(`/notes/${noteId}`);
+      setNote(noteSchema.parse(res.data));
     } finally {
       setLoading(false);
     }
@@ -46,7 +53,7 @@ export default function NoteDetail() {
         style: "destructive",
         onPress: async () => {
           setDeleting(true);
-          await api.delete(`/notes/${id}`);
+          await api.delete(`/notes/${noteId}`);
           router.replace("/");
         },
       },
@@ -56,13 +63,13 @@ export default function NoteDetail() {
   const summarizeNote = async () => {
     try {
       setSummarizing(true);
-      const res = await api.post(`/notes/${id}/summarize`);
-      setSummary(res.data.summary);
+      const res = await api.post(`/notes/${noteId}/summarize`);
+      setSummary(summaryResponseSchema.parse(res.data).summary);
       setShowSummary(true);
     } catch (error: any) {
       Alert.alert(
         "Error",
-        error.response?.data?.error || "Failed to summarize note"
+        error.response?.data?.error || "Failed to summarize note",
       );
     } finally {
       setSummarizing(false);
@@ -87,11 +94,11 @@ export default function NoteDetail() {
           disabled={summarizing}
         >
           <Text style={styles.summarizeBtnText}>
-            {summarizing ? "Summarizing..." : "✨ Summarize with AI"}
+            {summarizing ? "Summarizing..." : "Summarize with AI"}
           </Text>
         </TouchableOpacity>
 
-        <Link href={`/note/edit?id=${id}`} asChild>
+        <Link href={`/note/edit?id=${noteId}`} asChild>
           <TouchableOpacity style={styles.editBtn}>
             <Text style={styles.editBtnText}>Edit</Text>
           </TouchableOpacity>
@@ -104,7 +111,6 @@ export default function NoteDetail() {
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Summary Modal */}
       <Modal
         visible={showSummary}
         transparent={true}
@@ -113,7 +119,7 @@ export default function NoteDetail() {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>📝 AI Summary</Text>
+            <Text style={styles.modalTitle}>AI Summary</Text>
             <ScrollView style={styles.summaryScroll}>
               <Text style={styles.summaryText}>{summary}</Text>
             </ScrollView>
@@ -194,7 +200,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  // Modal styles
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",

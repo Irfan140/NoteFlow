@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { useState } from "react";
+import { signInSchema } from "../../schemas/auth";
 
 export default function Page() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -24,11 +25,17 @@ export default function Page() {
 
     setError(""); // reset error
 
+    const parsed = signInSchema.safeParse({ emailAddress, password });
+    if (!parsed.success) {
+      setError(parsed.error.issues[0]?.message || "Please check your input");
+      return;
+    }
+
     // Start the sign-in process using the email and password provided
     try {
       const signInAttempt = await signIn.create({
-        identifier: emailAddress,
-        password,
+        identifier: parsed.data.emailAddress,
+        password: parsed.data.password,
       });
 
       // If sign-in process is complete, set the created session as active

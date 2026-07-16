@@ -2,6 +2,10 @@ import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useSignUp } from "@clerk/clerk-expo";
 import { Link, useRouter } from "expo-router";
+import {
+  signUpSchema,
+  verificationCodeSchemaForm,
+} from "../../schemas/auth";
 
 export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -20,9 +24,17 @@ export default function SignUpScreen() {
 
     // Start sign-up process using email and password provided
     try {
+      const parsed = signUpSchema.safeParse({ emailAddress, password });
+      if (!parsed.success) {
+        setFriendlyError(
+          parsed.error.issues[0]?.message || "Please check your input",
+        );
+        return;
+      }
+
       await signUp.create({
-        emailAddress,
-        password,
+        emailAddress: parsed.data.emailAddress,
+        password: parsed.data.password,
       });
 
       // Send user an email with verification code
@@ -39,7 +51,7 @@ export default function SignUpScreen() {
 
       // friendly message
       setFriendlyError(
-        err?.errors?.[0]?.message || "Something went wrong. Please try again."
+        err?.errors?.[0]?.message || "Something went wrong. Please try again.",
       );
     }
   };
@@ -49,9 +61,17 @@ export default function SignUpScreen() {
     if (!isLoaded) return;
 
     try {
+      const parsed = verificationCodeSchemaForm.safeParse({ code });
+      if (!parsed.success) {
+        setFriendlyError(
+          parsed.error.issues[0]?.message || "Please enter the code",
+        );
+        return;
+      }
+
       // Use the code the user provided to attempt verification
       const signUpAttempt = await signUp.attemptEmailAddressVerification({
-        code,
+        code: parsed.data.code,
       });
 
       // If verification was completed, set the session to active

@@ -11,6 +11,7 @@ import { useApi } from "../../lib/api";
 import { Link, useRouter } from "expo-router";
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { notesSchema, type Note } from "../../schemas/note";
 
 export default function HomeScreen() {
   const api = useApi();
@@ -32,7 +33,7 @@ export default function HomeScreen() {
   const loadNotes = async () => {
     try {
       const res = await api.get("/notes");
-      setNotes(res.data as Note[]);
+      setNotes(notesSchema.parse(res.data));
     } finally {
       setLoading(false);
     }
