@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useApi } from "../../lib/api";
 import { useRouter } from "expo-router";
+import { noteInputSchema } from "../../schemas/note";
 
 export default function CreateNote() {
   const router = useRouter();
@@ -17,19 +18,33 @@ export default function CreateNote() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const onCreate = async () => {
-    if (!title.trim() || !content.trim()) return;
+    const parsed = noteInputSchema.safeParse({ title, content });
+    if (!parsed.success) {
+      setError(parsed.error.issues[0]?.message || "Please complete the note");
+      return;
+    }
 
     setLoading(true);
-    await api.post("/notes", { title, content });
-    setLoading(false);
-    router.back();
+    setError("");
+
+    try {
+      await api.post("/notes", parsed.data);
+      router.back();
+    } catch (err: any) {
+      setError(err?.response?.data?.error || "Failed to create note");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Create Note</Text>
+
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       <TextInput
         placeholder="Title"
@@ -72,6 +87,12 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "700",
     marginBottom: 25,
+  },
+
+  errorText: {
+    color: "#dc2626",
+    marginBottom: 12,
+    fontWeight: "500",
   },
 
   input: {

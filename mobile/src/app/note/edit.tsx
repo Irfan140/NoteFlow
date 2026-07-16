@@ -9,22 +9,35 @@ import {
 } from "react-native";
 import { useEffect, useState } from "react";
 import { useApi } from "../../lib/api";
+import {
+  noteInputSchema,
+  noteSchema,
+  routeIdSchema,
+} from "../../schemas/note";
 
 export default function EditNote() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const api = useApi();
+  const noteId = routeIdSchema.parse(id);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
   const loadData = async () => {
-    const res = await api.get(`/notes/${id}`);
-    setTitle(res.data.title);
-    setContent(res.data.content);
-    setLoading(false);
+    try {
+      const res = await api.get(`/notes/${noteId}`);
+      const note = noteSchema.parse(res.data);
+      setTitle(note.title);
+      setContent(note.content);
+    } catch (err: any) {
+      setError(err?.response?.data?.error || "Failed to load note");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -32,12 +45,23 @@ export default function EditNote() {
   }, []);
 
   const onSave = async () => {
-    if (!title.trim() || !content.trim()) return;
+    const parsed = noteInputSchema.safeParse({ title, content });
+    if (!parsed.success) {
+      setError(parsed.error.issues[0]?.message || "Please complete the note");
+      return;
+    }
 
     setSaving(true);
-    await api.put(`/notes/${id}`, { title, content });
-    setSaving(false);
-    router.back();
+    setError("");
+
+    try {
+      await api.put(`/notes/${noteId}`, parsed.data);
+      router.back();
+    } catch (err: any) {
+      setError(err?.response?.data?.error || "Failed to save note");
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loading)
@@ -48,6 +72,8 @@ export default function EditNote() {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Edit Note</Text>
+
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       <TextInput
         placeholder="Title"
@@ -94,6 +120,12 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "700",
     marginBottom: 20,
+  },
+
+  errorText: {
+    color: "#dc2626",
+    marginBottom: 12,
+    fontWeight: "500",
   },
 
   input: {
