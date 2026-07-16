@@ -67,7 +67,11 @@ export default function EditNote() {
 
   if (loading)
     return (
-      <ActivityIndicator size="large" color={colors.primary} style={styles.loading} />
+      <ActivityIndicator
+        size="large"
+        color={colors.primary}
+        style={styles.loading}
+      />
     );
 
   return (
@@ -78,6 +82,9 @@ export default function EditNote() {
         <Text style={styles.subText}>
           Refine the note without losing the original flow.
         </Text>
+        <View style={styles.pill}>
+          <Text style={styles.pillText}>In progress</Text>
+        </View>
 
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
@@ -106,7 +113,7 @@ export default function EditNote() {
           {saving ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.saveBtnText}>Save changes</Text>
+            <Text style={styles.saveBtnText}>Save changes &gt;</Text>
           )}
         </TouchableOpacity>
       </View>
@@ -155,6 +162,19 @@ const styles = StyleSheet.create({
     color: colors.danger,
     marginBottom: 12,
     fontWeight: "600",
+  },
+  pill: {
+    alignSelf: "flex-start",
+    backgroundColor: "#eff6ff",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginBottom: 14,
+  },
+  pillText: {
+    color: colors.primary,
+    fontWeight: "700",
+    fontSize: 12,
   },
   input: {
     borderWidth: 1,

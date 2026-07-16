@@ -102,7 +102,11 @@ export default function HomeScreen() {
                 ]}
               >
                 <View style={styles.noteMeta}>
-                  <View style={styles.dot} />
+                  <View style={styles.initialBadge}>
+                    <Text style={styles.initialText}>
+                      {item.title.trim().charAt(0).toUpperCase()}
+                    </Text>
+                  </View>
                   <Text style={styles.noteIndex}>Note {index + 1}</Text>
                 </View>
                 <Text style={styles.noteTitle} numberOfLines={1}>
@@ -111,6 +115,10 @@ export default function HomeScreen() {
                 <Text numberOfLines={3} style={styles.noteContent}>
                   {item.content}
                 </Text>
+                <View style={styles.cardFooter}>
+                  <Text style={styles.cardFooterText}>Open note</Text>
+                  <Text style={styles.cardFooterArrow}>&gt;</Text>
+                </View>
               </Pressable>
             </Link>
           )}
@@ -234,16 +242,23 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 10,
   },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 999,
-    backgroundColor: colors.primary,
+  initialBadge: {
+    width: 34,
+    height: 34,
+    borderRadius: 12,
+    backgroundColor: "#dbeafe",
+    alignItems: "center",
+    justifyContent: "center",
   },
   noteIndex: {
     color: colors.textMuted,
     fontSize: 12,
     fontWeight: "600",
+  },
+  initialText: {
+    color: colors.primary,
+    fontWeight: "800",
+    fontSize: 14,
   },
   noteTitle: {
     fontSize: 18,
@@ -254,6 +269,24 @@ const styles = StyleSheet.create({
   noteContent: {
     color: colors.textMuted,
     lineHeight: 21,
+  },
+  cardFooter: {
+    marginTop: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  cardFooterText: {
+    color: colors.primary,
+    fontSize: 12,
+    fontWeight: "700",
+    letterSpacing: 0.3,
+    textTransform: "uppercase",
+  },
+  cardFooterArrow: {
+    color: colors.primary,
+    fontSize: 16,
+    fontWeight: "700",
   },
   addButton: {
     backgroundColor: colors.primary,

@@ -70,7 +70,7 @@ export default function NoteDetail() {
     } catch (error: any) {
       Alert.alert(
         "Error",
-        error.response?.data?.error || "Failed to summarize note"
+        error.response?.data?.error || "Failed to summarize note",
       );
     } finally {
       setSummarizing(false);
@@ -79,7 +79,11 @@ export default function NoteDetail() {
 
   if (loading)
     return (
-      <ActivityIndicator size="large" color={colors.primary} style={styles.loading} />
+      <ActivityIndicator
+        size="large"
+        color={colors.primary}
+        style={styles.loading}
+      />
     );
 
   return (
@@ -89,28 +93,38 @@ export default function NoteDetail() {
           <Text style={styles.kicker}>Note details</Text>
           <Text style={styles.title}>{note?.title}</Text>
           <Text style={styles.content}>{note?.content}</Text>
+          <View style={styles.metaRow}>
+            <View style={styles.pill}>
+              <Text style={styles.pillText}>Ready to edit</Text>
+            </View>
+            <Text style={styles.metaHint}>Clean view</Text>
+          </View>
         </View>
 
         <View style={styles.actionCard}>
+          <View style={styles.actionHeader}>
+            <Text style={styles.actionHeaderText}>Actions</Text>
+            <Text style={styles.actionHeaderSub}>Quick tools</Text>
+          </View>
           <TouchableOpacity
             onPress={summarizeNote}
             style={styles.summarizeBtn}
             disabled={summarizing}
           >
             <Text style={styles.summarizeBtnText}>
-              {summarizing ? "Summarizing..." : "Summarize with AI"}
+              {summarizing ? "Summarizing..." : "Summarize"}
             </Text>
           </TouchableOpacity>
 
           <Link href={`/note/edit?id=${noteId}`} asChild>
             <TouchableOpacity style={styles.editBtn}>
-              <Text style={styles.editBtnText}>Edit note</Text>
+              <Text style={styles.editBtnText}>Edit</Text>
             </TouchableOpacity>
           </Link>
 
           <TouchableOpacity onPress={deleteNote} style={styles.deleteBtn}>
             <Text style={styles.deleteBtnText}>
-              {deleting ? "Deleting..." : "Delete note"}
+              {deleting ? "Deleting..." : "Delete"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -171,6 +185,19 @@ const styles = StyleSheet.create({
     gap: 10,
     ...shadows.card,
   },
+  actionHeader: {
+    marginBottom: 4,
+  },
+  actionHeaderText: {
+    color: colors.text,
+    fontSize: 15,
+    fontWeight: "800",
+  },
+  actionHeaderSub: {
+    color: colors.textMuted,
+    fontSize: 12,
+    marginTop: 2,
+  },
   kicker: {
     color: colors.accent,
     fontSize: 12,
@@ -189,6 +216,29 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
     fontSize: 16,
     lineHeight: 25,
+  },
+  metaRow: {
+    marginTop: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  metaHint: {
+    fontSize: 12,
+    color: colors.textMuted,
+    fontWeight: "600",
+  },
+  pill: {
+    alignSelf: "flex-start",
+    backgroundColor: "#eff6ff",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  pillText: {
+    color: colors.primary,
+    fontWeight: "700",
+    fontSize: 12,
   },
   summarizeBtn: {
     backgroundColor: colors.accent,

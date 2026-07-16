@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View, StyleSheet } from "react-native";
+import {
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+} from "react-native";
 import { useSignUp } from "@clerk/clerk-expo";
 import { Link, useRouter } from "expo-router";
 import {
@@ -25,7 +31,7 @@ export default function SignUpScreen() {
       const parsed = signUpSchema.safeParse({ emailAddress, password });
       if (!parsed.success) {
         setFriendlyError(
-          parsed.error.issues[0]?.message || "Please check your input"
+          parsed.error.issues[0]?.message || "Please check your input",
         );
         return;
       }
@@ -41,7 +47,7 @@ export default function SignUpScreen() {
     } catch (err: any) {
       console.error(JSON.stringify(err, null, 2));
       setFriendlyError(
-        err?.errors?.[0]?.message || "Something went wrong. Please try again."
+        err?.errors?.[0]?.message || "Something went wrong. Please try again.",
       );
     }
   };
@@ -53,7 +59,7 @@ export default function SignUpScreen() {
       const parsed = verificationCodeSchemaForm.safeParse({ code });
       if (!parsed.success) {
         setFriendlyError(
-          parsed.error.issues[0]?.message || "Please enter the code"
+          parsed.error.issues[0]?.message || "Please enter the code",
         );
         return;
       }
@@ -81,7 +87,9 @@ export default function SignUpScreen() {
         <View style={styles.card}>
           <Text style={styles.kicker}>Verify email</Text>
           <Text style={styles.title}>Enter code</Text>
-          <Text style={styles.subText}>We sent a one-time code to your inbox.</Text>
+          <Text style={styles.subText}>
+            We sent a one-time code to your inbox.
+          </Text>
 
           <TextInput
             value={code}
@@ -111,6 +119,9 @@ export default function SignUpScreen() {
         <Text style={styles.subText}>
           A clean place to save ideas, drafts, and reminders.
         </Text>
+        <View style={styles.pill}>
+          <Text style={styles.pillText}>Fast setup</Text>
+        </View>
 
         <TextInput
           autoCapitalize="none"
@@ -135,7 +146,7 @@ export default function SignUpScreen() {
         )}
 
         <TouchableOpacity onPress={onSignUpPress} style={styles.button}>
-          <Text style={styles.buttonText}>Continue</Text>
+          <Text style={styles.buttonText}>Continue &gt;</Text>
         </TouchableOpacity>
 
         <View style={styles.footerRow}>
@@ -185,6 +196,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 22,
     lineHeight: 20,
+  },
+  pill: {
+    alignSelf: "center",
+    backgroundColor: "#eff6ff",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginBottom: 14,
+  },
+  pillText: {
+    color: colors.primary,
+    fontWeight: "700",
+    fontSize: 12,
   },
   input: {
     width: "100%",

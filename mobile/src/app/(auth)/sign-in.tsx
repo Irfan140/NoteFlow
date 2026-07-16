@@ -57,6 +57,9 @@ export default function Page() {
         <Text style={styles.subText}>
           Pick up your notes right where you left off.
         </Text>
+        <View style={styles.pill}>
+          <Text style={styles.pillText}>Secure sign in</Text>
+        </View>
 
         {error !== "" && (
           <View style={styles.errorBox}>
@@ -133,6 +136,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 22,
     lineHeight: 20,
+  },
+  pill: {
+    alignSelf: "center",
+    backgroundColor: "#eff6ff",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginBottom: 14,
+  },
+  pillText: {
+    color: colors.primary,
+    fontWeight: "700",
+    fontSize: 12,
   },
   input: {
     width: "100%",

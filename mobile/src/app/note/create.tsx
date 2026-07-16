@@ -49,6 +49,9 @@ export default function CreateNote() {
         <Text style={styles.subText}>
           Keep it short. You can always expand later.
         </Text>
+        <View style={styles.pill}>
+          <Text style={styles.pillText}>Draft mode</Text>
+        </View>
 
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
@@ -77,7 +80,7 @@ export default function CreateNote() {
           {loading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text style={styles.saveBtnText}>Save note</Text>
+            <Text style={styles.saveBtnText}>Save note &gt;</Text>
           )}
         </TouchableOpacity>
       </View>
@@ -123,6 +126,19 @@ const styles = StyleSheet.create({
     color: colors.danger,
     marginBottom: 12,
     fontWeight: "600",
+  },
+  pill: {
+    alignSelf: "flex-start",
+    backgroundColor: "#eff6ff",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    marginBottom: 14,
+  },
+  pillText: {
+    color: colors.primary,
+    fontWeight: "700",
+    fontSize: 12,
   },
   input: {
     borderWidth: 1,
