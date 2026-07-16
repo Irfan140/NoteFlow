@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import * as noteService from "../services/note.service";
+import { summarizeContent } from "../services/summarize.service";
 
 export const createNote = async (req: Request, res: Response) => {
   try {
@@ -78,13 +79,12 @@ export const deleteNote = async (req: Request, res: Response) => {
   }
 };
 
-
 // Summarize the notes
 export const summarizeNote = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).userId;
     const noteId = req.params.noteId;
-    
+
     if (!noteId) {
       return res.status(400).json({ error: "Missing noteId parameter" });
     }
@@ -97,33 +97,18 @@ export const summarizeNote = async (req: Request, res: Response) => {
 
     // Check if note has content
     if (!note.content || note.content.trim().length < 10) {
-      return res.status(400).json({ error: "Note content is too short to summarize" });
+      return res
+        .status(400)
+        .json({ error: "Note content is too short to summarize" });
     }
 
-    // Call AI service
-    const aiServiceUrl = process.env.AI_SERVICE_URL!;
-    const response = await fetch(`${aiServiceUrl}/summarize`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        content: note.content,
-      }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json() as { detail?: string };
-      throw new Error(error.detail || "AI service failed");
-    }
-
-    const data = await response.json() as { summary: string };
-    res.status(200).json({ summary: data.summary });
+    const { summary } = await summarizeContent({ content: note.content });
+    res.status(200).json({ summary });
   } catch (error: any) {
     console.error("Summarization error:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: "Failed to summarize note",
-      message: error.message 
+      message: error.message,
     });
   }
 };

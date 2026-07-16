@@ -6,7 +6,7 @@ export const clerkAuth = requireAuth();
 export const attachUserId = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   // Clerk injects auth object
   const userId = (req as any).auth?.userId;

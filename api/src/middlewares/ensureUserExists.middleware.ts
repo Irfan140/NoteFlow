@@ -1,5 +1,5 @@
 import { clerkClient } from "@clerk/express";
-import { prisma } from "../config/config";
+import { prisma } from "../config/db";
 
 export const ensureUserExists = async (req: any, res: any, next: any) => {
   try {
