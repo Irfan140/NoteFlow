@@ -1,46 +1,33 @@
 # NoteFlow
 
-A full-stack note-taking application built with React Native (Expo), Bun + Express, and PostgreSQL. It includes Clerk authentication and AI-powered note summarization via LangChain with Groq models.
+<p align="center">
+  <img src="docs/gifs/demo.gif" alt="NoteFlow demo" width="320" />
+</p>
+
+## About
+
+NoteFlow is a full-stack note-taking app built for fast capture, clean organization, and AI-assisted productivity.  
+It combines a polished mobile experience with a reliable backend, authentication, and structured data handling.
 
 ## Features
 
-- **User Authentication**: Secure authentication powered by Clerk
-- **Create & Edit Notes**: Intuitive interface for note management
-- **AI Note Summarization**: Summarize notes using LLaMA 3.3 via Groq, powered by LangChain
-- **Real-time Sync**: Notes are synced with a PostgreSQL database
-- **Cross-Platform**: Mobile app runs on iOS, Android, and Web
-- **Type-Safe**: Full TypeScript implementation across frontend and backend with zod
-- **Modern Stack**: Built with latest technologies and best practices
+- Secure user authentication with Clerk
+- Create, edit, and manage notes with a smooth mobile UI
+- AI-powered note summarization using LangChain and Groq
+- PostgreSQL-backed persistence for reliable data storage
+- Cross-platform support for iOS, Android, and Web
+- Type-safe development across the stack with TypeScript and Zod
 
-## 📋 Tech Stack
+## Tech Stack
 
-### Backend
+### Client
 
-- **Runtime**: Bun
-- **Framework**: Express.js
-- **Database**: PostgreSQL with Prisma ORM
-- **Authentication**: Clerk Express SDK
-- **validation**: zod
-- **AI work**: LangChain with Groq models
+- Expo Router, React Native, and Expo
+- Clerk for authentication
+- Axios, Zod, and TypeScript
 
-### Mobile (Frontend)
+### Server
 
-- **Framework**: React Native with Expo
-- **Navigation**: Expo Router
-- **Authentication**: Clerk Expo SDK
-- **HTTP Client**: Axios
-
-## 📽️ Demo
-
-<table align="center">
-  <tr>
-    <td align="center"><img src="docs/gifs/demo.gif" alt="Sign In" width="240"/></td>
-  </tr>
-  
-</table>
-
-## 👤 Author
-
-**Irfan Mehmud**
-
-- GitHub: [@Irfan140](https://github.com/Irfan140)
+- Bun and Express.js
+- PostgreSQL and Prisma
+- LangChain and Groq for AI features
