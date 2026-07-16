@@ -12,7 +12,7 @@ export default function RootLayout() {
       publishableKey={env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
       tokenCache={tokenCache}
     >
-      <StatusBar style="dark" backgroundColor="#f5f7fb" />
+      <StatusBar hidden />
       <AppRoutes />
     </ClerkProvider>
   );
