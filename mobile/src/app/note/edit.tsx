@@ -13,7 +13,8 @@ import {
   noteInputSchema,
   noteSchema,
   routeIdSchema,
-} from "../../schemas/note";
+} from "../../lib/schemas/note";
+import { colors, shadows } from "../../theme/colors";
 
 export default function EditNote() {
   const { id } = useLocalSearchParams();
@@ -66,41 +67,49 @@ export default function EditNote() {
 
   if (loading)
     return (
-      <ActivityIndicator size="large" color="#2563eb" style={styles.loading} />
+      <ActivityIndicator size="large" color={colors.primary} style={styles.loading} />
     );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Edit Note</Text>
+      <View style={styles.card}>
+        <Text style={styles.kicker}>Update note</Text>
+        <Text style={styles.heading}>Edit Note</Text>
+        <Text style={styles.subText}>
+          Refine the note without losing the original flow.
+        </Text>
 
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+        {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-      <TextInput
-        placeholder="Title"
-        value={title}
-        onChangeText={setTitle}
-        style={styles.input}
-      />
+        <TextInput
+          placeholder="Title"
+          placeholderTextColor="#94a3b8"
+          value={title}
+          onChangeText={setTitle}
+          style={styles.input}
+        />
 
-      <TextInput
-        placeholder="Content"
-        multiline
-        value={content}
-        onChangeText={setContent}
-        style={styles.textArea}
-      />
+        <TextInput
+          placeholder="Content"
+          placeholderTextColor="#94a3b8"
+          multiline
+          value={content}
+          onChangeText={setContent}
+          style={styles.textArea}
+        />
 
-      <TouchableOpacity
-        onPress={onSave}
-        disabled={saving}
-        style={[styles.saveBtn, saving && styles.saveBtnLoading]}
-      >
-        {saving ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.saveBtnText}>Save Changes</Text>
-        )}
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={onSave}
+          disabled={saving}
+          style={[styles.saveBtn, saving && styles.saveBtnLoading]}
+        >
+          {saving ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.saveBtnText}>Save changes</Text>
+          )}
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -109,60 +118,77 @@ const styles = StyleSheet.create({
   loading: {
     marginTop: 50,
   },
-
   container: {
     flex: 1,
     justifyContent: "center",
-    padding: 25,
+    padding: 20,
+    backgroundColor: colors.bg,
   },
-
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: 24,
+    padding: 22,
+    borderWidth: 1,
+    borderColor: colors.border,
+    ...shadows.card,
+  },
+  kicker: {
+    color: colors.accent,
+    fontSize: 12,
+    fontWeight: "700",
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+    marginBottom: 8,
+  },
   heading: {
     fontSize: 28,
-    fontWeight: "700",
-    marginBottom: 20,
+    fontWeight: "800",
+    color: colors.text,
   },
-
+  subText: {
+    marginTop: 8,
+    marginBottom: 18,
+    color: colors.textMuted,
+    lineHeight: 20,
+  },
   errorText: {
-    color: "#dc2626",
+    color: colors.danger,
     marginBottom: 12,
-    fontWeight: "500",
+    fontWeight: "600",
   },
-
   input: {
     borderWidth: 1,
-    borderColor: "#d1d5db",
-    borderRadius: 10,
-    padding: 12,
+    borderColor: colors.border,
+    borderRadius: 16,
+    padding: 14,
     marginBottom: 12,
-    backgroundColor: "#f9fafb",
+    backgroundColor: colors.surfaceMuted,
+    color: colors.text,
   },
-
   textArea: {
     borderWidth: 1,
-    borderColor: "#d1d5db",
-    borderRadius: 10,
-    padding: 12,
-    height: 130,
-    backgroundColor: "#f9fafb",
+    borderColor: colors.border,
+    borderRadius: 16,
+    padding: 14,
+    minHeight: 150,
+    backgroundColor: colors.surfaceMuted,
+    color: colors.text,
     textAlignVertical: "top",
   },
-
   saveBtn: {
-    backgroundColor: "#2563eb",
-    padding: 15,
-    borderRadius: 10,
-    marginTop: 15,
+    backgroundColor: colors.primary,
+    padding: 16,
+    borderRadius: 16,
+    marginTop: 16,
+    alignItems: "center",
+    ...shadows.button,
   },
-
   saveBtnLoading: {
-    backgroundColor: "#1e4fcf",
     opacity: 0.8,
   },
-
   saveBtnText: {
-    textAlign: "center",
     color: "#fff",
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "700",
   },
 });
