@@ -1,4 +1,5 @@
-import { prisma } from "../config/config";
+import { prisma } from "../config/db.ts";
+import type { CreateNote, UpdateNote } from "../types/note.ts";
 
 export const createNote = async (userId: string, data: CreateNote) => {
   return await prisma.note.create({
@@ -28,7 +29,7 @@ export const getNoteByNoteId = async (noteId: string, userId: string) => {
 export const updateNote = async (
   noteId: string,
   userId: string,
-  data: UpdateNote
+  data: UpdateNote,
 ) => {
   return await prisma.note.update({
     where: {

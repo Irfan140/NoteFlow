@@ -1,13 +1,10 @@
 generator client {
   provider   = "prisma-client-js"
   output     = "../generated/client"
-  // Bun has problems running Prisma with default engineType = "library".
-  engineType = "binary"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model User {

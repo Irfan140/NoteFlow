@@ -43,4 +43,4 @@ app-example
 /android
 
 # extra
-.env
+.env.development

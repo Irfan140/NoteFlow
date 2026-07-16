@@ -1,9 +1,9 @@
-interface CreateNote {
+export type CreateNote = {
   title: string;
   content?: string;
-}
+};
 
-interface UpdateNote {
+export type UpdateNote = {
   title?: string;
   content?: string;
-}
+};
