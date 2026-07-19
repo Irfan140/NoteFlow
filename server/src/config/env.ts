@@ -18,6 +18,18 @@ const envSchema = z.object({
   CLERK_PUBLISHABLE_KEY: z.string().min(1),
 
   GROQ_API_KEY: z.string().min(1),
+
+  LANGSMITH_TRACING: z
+    .string()
+    .optional()
+    .default("false")
+    .transform((value) => value.toLowerCase() === "true"),
+  LANGSMITH_ENDPOINT: z
+    .string()
+    .url()
+    .default("https://api.smith.langchain.com"),
+  LANGSMITH_API_KEY: z.string().min(1).optional(),
+  LANGSMITH_PROJECT: z.string().min(1).default("NoteFlow"),
 });
 
 const parsed = envSchema.safeParse(process.env);
