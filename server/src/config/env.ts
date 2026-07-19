@@ -19,6 +19,8 @@ const envSchema = z.object({
 
   GROQ_API_KEY: z.string().min(1),
 
+  REDIS_URL: z.string().url().default("redis://localhost:6379"),
+
   LANGSMITH_TRACING: z
     .string()
     .optional()

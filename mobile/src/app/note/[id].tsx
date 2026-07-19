@@ -10,12 +10,14 @@ import {
   Modal,
 } from "react-native";
 import { useEffect, useState } from "react";
+import { useRef } from "react";
 import { useApi } from "../../lib/api";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   noteSchema,
   routeIdSchema,
-  summaryResponseSchema,
+  summaryJobResponseSchema,
+  summaryStatusResponseSchema,
   type Note,
 } from "../../lib/schemas/note";
 import { colors, shadows } from "../../theme/colors";
@@ -30,8 +32,12 @@ export default function NoteDetail() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
   const [summarizing, setSummarizing] = useState(false);
+  const [summaryStatus, setSummaryStatus] = useState<
+    "queued" | "processing" | "completed" | "failed" | null
+  >(null);
   const [summary, setSummary] = useState<string | null>(null);
   const [showSummary, setShowSummary] = useState(false);
+  const mountedRef = useRef(true);
 
   const load = async () => {
     try {
@@ -44,6 +50,10 @@ export default function NoteDetail() {
 
   useEffect(() => {
     load();
+
+    return () => {
+      mountedRef.current = false;
+    };
   }, []);
 
   const deleteNote = async () => {
@@ -64,18 +74,55 @@ export default function NoteDetail() {
   const summarizeNote = async () => {
     try {
       setSummarizing(true);
-      const res = await api.post(`/notes/${noteId}/summarize`);
-      setSummary(summaryResponseSchema.parse(res.data).summary);
-      setShowSummary(true);
+      setSummary(null);
+      setSummaryStatus("queued");
+
+      const response = await api.post(`/notes/${noteId}/summarize`);
+      const { jobId } = summaryJobResponseSchema.parse(response.data);
+
+      while (mountedRef.current) {
+        await new Promise((resolve) => setTimeout(resolve, 2_000));
+        if (!mountedRef.current) return;
+
+        const statusResponse = await api.get(
+          `/notes/${noteId}/summarize/${jobId}`,
+        );
+        const status = summaryStatusResponseSchema.parse(statusResponse.data);
+        setSummaryStatus(status.status);
+
+        if (status.status === "completed" && status.summary) {
+          setSummary(status.summary);
+          setShowSummary(true);
+          break;
+        }
+
+        if (status.status === "failed") {
+          throw new Error(status.error || "Summary generation failed");
+        }
+      }
     } catch (error: any) {
       Alert.alert(
         "Error",
-        error.response?.data?.error || "Failed to summarize note",
+        error.response?.data?.error ||
+          error.message ||
+          "Failed to summarize note",
       );
+      if (mountedRef.current) setSummaryStatus("failed");
     } finally {
-      setSummarizing(false);
+      if (mountedRef.current) setSummarizing(false);
     }
   };
+
+  const summaryStatusLabel =
+    summaryStatus === "queued"
+      ? "Queued"
+      : summaryStatus === "processing"
+        ? "Processing"
+        : summaryStatus === "completed"
+          ? "Completed"
+          : summaryStatus === "failed"
+            ? "Failed"
+            : null;
 
   if (loading)
     return (
@@ -112,9 +159,17 @@ export default function NoteDetail() {
             disabled={summarizing}
           >
             <Text style={styles.summarizeBtnText}>
-              {summarizing ? "Summarizing..." : "Summarize"}
+              {summarizing
+                ? `${summaryStatusLabel ?? "Queued"}...`
+                : "Summarize"}
             </Text>
           </TouchableOpacity>
+
+          {summaryStatusLabel && (
+            <Text style={styles.summaryStatus}>
+              Summary status: {summaryStatusLabel}
+            </Text>
+          )}
 
           <Link href={`/note/edit?id=${noteId}`} asChild>
             <TouchableOpacity style={styles.editBtn}>
@@ -249,6 +304,11 @@ const styles = StyleSheet.create({
   summarizeBtnText: {
     color: "#fff",
     fontWeight: "700",
+  },
+  summaryStatus: {
+    color: colors.textMuted,
+    fontSize: 13,
+    textAlign: "center",
   },
   editBtn: {
     backgroundColor: colors.primary,
