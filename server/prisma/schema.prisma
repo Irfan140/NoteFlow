@@ -20,6 +20,7 @@ model Note {
   id        String   @id @default(cuid())
   title     String
   content   String?
+  summary   String?
   userId    String // foreign key
   user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())

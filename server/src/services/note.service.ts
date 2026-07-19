@@ -48,3 +48,18 @@ export const deleteNote = async (noteId: string, userId: string) => {
     },
   });
 };
+
+export const saveSummary = async (
+  noteId: string,
+  userId: string,
+  summary: string,
+) => {
+  const result = await prisma.note.updateMany({
+    where: { id: noteId, userId },
+    data: { summary },
+  });
+
+  if (result.count === 0) {
+    throw new Error("Note not found while saving summary");
+  }
+};

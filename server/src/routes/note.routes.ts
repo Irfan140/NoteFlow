@@ -14,5 +14,6 @@ router.get("/:noteId", noteController.getNoteByNoteId);
 router.put("/:noteId", noteController.updateNote);
 router.delete("/:noteId", noteController.deleteNote);
 router.post("/:noteId/summarize", noteController.summarizeNote);
+router.get("/:noteId/summarize/:jobId", noteController.getSummaryStatus);
 
 export default router;

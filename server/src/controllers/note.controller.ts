@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import * as noteService from "../services/note.service";
-import { summarizeContent } from "../services/summarize.service";
+import { enqueueSummary, summaryQueue } from "../queues/summary.queue";
 
 export const createNote = async (req: Request, res: Response) => {
   try {
@@ -102,13 +102,61 @@ export const summarizeNote = async (req: Request, res: Response) => {
         .json({ error: "Note content is too short to summarize" });
     }
 
-    const { summary } = await summarizeContent({ content: note.content });
-    res.status(200).json({ summary });
+    const job = await enqueueSummary({
+      noteId,
+      userId,
+      content: note.content,
+    });
+
+    res.status(202).json({ jobId: job.id, status: "queued" });
   } catch (error: any) {
     console.error("Summarization error:", error);
     res.status(500).json({
       error: "Failed to summarize note",
       message: error.message,
     });
+  }
+};
+
+export const getSummaryStatus = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).userId;
+    const noteId = req.params.noteId;
+    const jobId = req.params.jobId;
+
+    if (!noteId || !jobId) {
+      return res.status(400).json({ error: "Missing summary job parameters" });
+    }
+
+    const job = await summaryQueue.getJob(jobId);
+    if (!job || job.data.noteId !== noteId || job.data.userId !== userId) {
+      return res.status(404).json({ error: "Summary job not found" });
+    }
+
+    const state = await job.getState();
+    if (state === "completed") {
+      const note = await noteService.getNoteByNoteId(noteId, userId);
+      return res.status(200).json({
+        jobId,
+        status: "completed",
+        summary: note?.summary ?? null,
+      });
+    }
+
+    if (state === "failed") {
+      return res.status(200).json({
+        jobId,
+        status: "failed",
+        error: job.failedReason || "Summary generation failed",
+      });
+    }
+
+    return res.status(200).json({
+      jobId,
+      status: state === "active" ? "processing" : "queued",
+    });
+  } catch (error) {
+    console.error("Summary status error:", error);
+    return res.status(500).json({ error: "Failed to fetch summary status" });
   }
 };
