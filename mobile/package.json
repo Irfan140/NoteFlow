@@ -9,8 +9,11 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "build": "eas build:configure",
-    "build:apk": "eas build -p android"
+    "eas:config": "eas build:configure",
+    "eas:init": "eas init",
+    "dev:build": "eas build --profile development --platform android",
+    "preview:build": "eas build --profile preview --platform android",
+    "prod:build": "eas build --profile production --platform android"
   },
   "dependencies": {
     "@clerk/clerk-expo": "^2.19.31",
@@ -21,6 +24,7 @@
     "expo": "~55.0.28",
     "expo-auth-session": "~55.0.17",
     "expo-constants": "~55.0.17",
+    "expo-dev-client": "~55.0.37",
     "expo-device": "~55.0.19",
     "expo-font": "~55.0.8",
     "expo-glass-effect": "~55.0.11",

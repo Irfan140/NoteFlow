@@ -1,11 +1,11 @@
 {
   "expo": {
     "name": "NoteFlow",
-    "slug": "mobile",
+    "slug": "noteflow",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "mobile",
+    "scheme": "noteflow",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"
@@ -18,7 +18,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.irfan140.mobile"
+      "package": "com.irfan140.noteflow"
     },
     "web": {
       "output": "static",
@@ -44,8 +44,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "311aee50-af6f-49f8-b7e8-b4da78bec47c"
+        "projectId": "ef5e5e47-9db2-460e-9257-965b50b329fe"
       }
-    }
+    },
+    "owner": "irfan140"
   }
 }
