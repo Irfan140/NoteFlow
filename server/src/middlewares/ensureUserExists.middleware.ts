@@ -11,7 +11,7 @@ export const ensureUserExists = async (req: any, res: any, next: any) => {
     }
 
     // Check if user exists in DB
-    let user = await prisma.user.findUnique({ where: { id: userId } });
+    const user = await prisma.user.findUnique({ where: { id: userId } });
     if (user) return next();
 
     // Fetch full user info from Clerk backend API

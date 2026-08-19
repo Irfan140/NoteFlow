@@ -22,7 +22,7 @@ export const getNotesByUserId = async (req: Request, res: Response) => {
 
     const notes = await noteService.getNotesByUserId(userId);
     res.status(200).json(notes);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: "Failed to fetch notes" });
   }
 };
@@ -38,7 +38,7 @@ export const getNoteByNoteId = async (req: Request, res: Response) => {
     if (!note) return res.status(404).json({ error: "Note not found" });
 
     res.status(200).json(note);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: "Failed to fetch note" });
   }
 };
@@ -56,7 +56,7 @@ export const updateNote = async (req: Request, res: Response) => {
 
     const updated = await noteService.updateNote(noteId, userId, data);
     res.status(200).json(updated);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: "Failed to update note" });
   }
 };
@@ -72,7 +72,7 @@ export const deleteNote = async (req: Request, res: Response) => {
 
     await noteService.deleteNote(noteId, userId);
     res.status(200).json({ message: "Note deleted successfully" });
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: "Failed to delete note" });
   }
 };
