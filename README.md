@@ -1,7 +1,7 @@
 # NoteFlow
 
 <p align="center">
-  <img src="docs/gifs/demo.gif" alt="NoteFlow demo" width="320" />
+  <img src="docs/images/banner.png" alt="NoteFlow demo" width="320" />
 </p>
 
 NoteFlow is a full-stack note-taking app for capturing, managing, and refining ideas from a focused mobile interface. It combines an Expo and React Native client with a TypeScript backend, secure authentication, persistent note storage, and AI-powered summaries.
@@ -12,22 +12,14 @@ NoteFlow is a full-stack note-taking app for capturing, managing, and refining i
 - Lists notes belonging to the signed-in user
 - Creates, reads, edits, and deletes notes
 - Displays individual notes in a dedicated detail view
-- Queues note-summary requests for background processing
-- Generates concise summaries with LangChain and Groq
+- Queues note-summary requests for background processing with BullMQ and Redis
+- Generates concise summaries with LangChain and Groq (model configurable via `MODEL_NAME`)
 - Shows summary progress while a background job is queued or processing
-- Stores users, notes, and generated summaries in PostgreSQL
-- Provides a responsive Expo experience for Android, iOS, and web
+- Stores users, notes, and generated summaries in PostgreSQL via Prisma
+- Validates environment variables at startup with Zod
+- Provides structured logging with Pino and HTTP request logging
+- Enforces consistent formatting with Prettier
 
-## How it is organized
-
-```text
-Note-App/
-|-- mobile/          Expo Router and React Native client
-|-- server/          Express API and background worker
-|-- docs/gifs/       Product demo assets
-|-- docker-compose.dev.yml
-`-- docker-compose.prod.yml
-```
 
 The mobile client communicates with the protected notes API. The API validates the authenticated user, handles note operations, and places summarization requests on a BullMQ queue. A separate worker consumes those jobs, calls the Groq model through LangChain, and saves the resulting summary to the note.
 
@@ -45,11 +37,15 @@ The mobile client communicates with the protected notes API. The API validates t
 ### Server
 
 - Bun and Express 5
-- Clerk Express middleware
-- PostgreSQL with Prisma 7
-- Redis with BullMQ for background jobs
+- Clerk Express middleware for authentication
+- PostgreSQL with Prisma 7 (pg adapter)
+- Redis with BullMQ for background job queues
 - LangChain and Groq for AI summarization
-- Zod and TypeScript
+- LangSmith for tracing and observability
+- Pino for structured logging with HTTP request logging
+- Zod for runtime validation (env vars, request/response schemas)
+- Prettier for code formatting
+- TypeScript
 
 ## Main user flow
 
@@ -60,15 +56,3 @@ The mobile client communicates with the protected notes API. The API validates t
 5. The server queues the request and the worker stores the completed summary.
 6. The mobile client polls the job status and presents the summary when it is ready.
 
-## API surface
-
-The server exposes a health endpoint and authenticated note endpoints:
-
-- `GET /health`
-- `GET /notes`
-- `POST /notes`
-- `GET /notes/:noteId`
-- `PUT /notes/:noteId`
-- `DELETE /notes/:noteId`
-- `POST /notes/:noteId/summarize`
-- `GET /notes/:noteId/summarize/:jobId`
