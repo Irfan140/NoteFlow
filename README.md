@@ -1,7 +1,7 @@
 # NoteFlow
 
 <p align="center">
-  <img src="docs/images/banner.png" alt="NoteFlow demo" width="320" />
+  <img src="docs/images/banner.png" alt="NoteFlow demo"/>
 </p>
 
 NoteFlow is a full-stack note-taking app for capturing, managing, and refining ideas from a focused mobile interface. It combines an Expo and React Native client with a TypeScript backend, secure authentication, persistent note storage, and AI-powered summaries.
