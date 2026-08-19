@@ -1,27 +1,22 @@
-import { useSignIn } from "@clerk/clerk-expo";
+import { useAuth } from "../../state/auth";
 import { Link, useRouter } from "expo-router";
 import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+  StyleSheet, Text, TextInput, TouchableOpacity, View,
 } from "react-native";
 import { useState } from "react";
-import { signInSchema } from "../../lib/schemas/auth";
+import { signInSchema } from "../../schemas/auth";
 import { colors, shadows } from "../../theme/colors";
 
 export default function Page() {
-  const { signIn, setActive, isLoaded } = useSignIn();
+  const { signIn } = useAuth();
   const router = useRouter();
 
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const onSignInPress = async () => {
-    if (!isLoaded) return;
-
     setError("");
 
     const parsed = signInSchema.safeParse({ emailAddress, password });
@@ -30,22 +25,15 @@ export default function Page() {
       return;
     }
 
+    setLoading(true);
     try {
-      const signInAttempt = await signIn.create({
-        identifier: parsed.data.emailAddress,
-        password: parsed.data.password,
-      });
-
-      if (signInAttempt.status === "complete") {
-        await setActive({ session: signInAttempt.createdSessionId });
-        router.replace("/");
-      } else {
-        console.error(JSON.stringify(signInAttempt, null, 2));
-      }
+      await signIn(parsed.data.emailAddress, parsed.data.password);
+      router.replace("/");
     } catch (err: any) {
-      console.error("SIGN_IN_ERROR::", JSON.stringify(err, null, 2));
-      const message = err?.errors?.[0]?.message || "Something went wrong";
+      const message = err?.response?.data?.error || err?.message || "Something went wrong";
       setError(message);
+    } finally {
+      setLoading(false);
     }
   };
 

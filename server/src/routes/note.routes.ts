@@ -1,7 +1,6 @@
 import { Router } from "express";
-import { attachUserId, clerkAuth } from "../middlewares/clerkAuth";
+import { jwtAuth } from "../middlewares/auth";
 import * as noteController from "../controllers/note.controller";
-import { ensureUserExists } from "../middlewares/ensureUserExists.middleware";
 import { notesRateLimiter, summarizeRateLimiter } from "../libs/rate-limiter";
 
 const router = Router();
@@ -9,7 +8,7 @@ const router = Router();
 router.use(notesRateLimiter);
 
 // All note routes require Authentication
-router.use(clerkAuth, attachUserId, ensureUserExists);
+router.use(jwtAuth);
 
 router.post("/", noteController.createNote);
 router.get("/", noteController.getNotesByUserId);

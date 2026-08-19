@@ -8,7 +8,7 @@ NoteFlow is a full-stack note-taking app for capturing, managing, and refining i
 
 ## What it does
 
-- Authenticates users with Clerk
+- JWT-based authentication (access + refresh tokens)
 - Lists notes belonging to the signed-in user
 - Creates, reads, edits, and deletes notes
 - Displays individual notes in a dedicated detail view
@@ -29,7 +29,7 @@ The mobile client communicates with the protected notes API. The API validates t
 
 - Expo 55 and React Native
 - Expo Router with typed routes
-- Clerk Expo authentication
+- JWT authentication (access + refresh tokens)
 - Axios for API communication
 - Zod for input and response validation
 - TypeScript
@@ -37,7 +37,7 @@ The mobile client communicates with the protected notes API. The API validates t
 ### Server
 
 - Bun and Express 5
-- Clerk Express middleware for authentication
+- JWT middleware for authentication
 - PostgreSQL with Prisma 7 (pg adapter)
 - Redis with BullMQ for background job queues
 - LangChain and Groq for AI summarization
@@ -49,7 +49,7 @@ The mobile client communicates with the protected notes API. The API validates t
 
 ## Main user flow
 
-1. A user signs in through Clerk.
+1. A user signs up or signs in with email and password.
 2. NoteFlow loads the user's notes from the API.
 3. The user can create, edit, view, or delete a note.
 4. From the note detail screen, the user can request an AI summary.

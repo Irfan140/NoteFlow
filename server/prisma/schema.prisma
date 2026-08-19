@@ -8,12 +8,13 @@ datasource db {
 }
 
 model User {
-  id        String   @id // Clerk user ID, not our own auto-generated ID from prisma
-  email     String   @unique
-  name      String?
-  imageUrl  String?
-  notes     Note[]
-  createdAt DateTime @default(now())
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  refreshToken String?
+  notes        Note[]
+  createdAt    DateTime @default(now())
 }
 
 model Note {

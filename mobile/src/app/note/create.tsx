@@ -7,14 +7,13 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
-import { useApi } from "../../lib/api";
+import api from "../../libs/api";
 import { useRouter } from "expo-router";
-import { noteInputSchema } from "../../lib/schemas/note";
+import { noteInputSchema } from "../../schemas/note";
 import { colors, shadows } from "../../theme/colors";
 
 export default function CreateNote() {
   const router = useRouter();
-  const api = useApi();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");

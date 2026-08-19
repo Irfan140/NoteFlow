@@ -10,8 +10,16 @@ export const notesSchema = z.array(noteSchema);
 
 export const noteInputSchema = noteSchema.omit({ id: true });
 
-export const summaryResponseSchema = z.object({
-  summary: z.string().trim().min(1, "Summary is required"),
+export const summaryJobResponseSchema = z.object({
+  jobId: z.string().min(1),
+  status: z.literal("queued"),
+});
+
+export const summaryStatusResponseSchema = z.object({
+  jobId: z.string().min(1),
+  status: z.enum(["queued", "processing", "completed", "failed"]),
+  summary: z.string().trim().min(1).nullable().optional(),
+  error: z.string().optional(),
 });
 
 export const routeIdSchema = z

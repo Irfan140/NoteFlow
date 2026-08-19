@@ -8,18 +8,17 @@ import {
   StyleSheet,
 } from "react-native";
 import { useEffect, useState } from "react";
-import { useApi } from "../../lib/api";
+import api from "../../libs/api";
 import {
   noteInputSchema,
   noteSchema,
   routeIdSchema,
-} from "../../lib/schemas/note";
+} from "../../schemas/note";
 import { colors, shadows } from "../../theme/colors";
 
 export default function EditNote() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
-  const api = useApi();
   const noteId = routeIdSchema.parse(id);
 
   const [title, setTitle] = useState("");
