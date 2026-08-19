@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy Policy | NoteFlow</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        background: #f7f9fc;
+        color: #1f2430;
+        line-height: 1.6;
+        padding: 40px 20px;
+      }
+      .container {
+        max-width: 720px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      }
+      h1 {
+        font-size: 1.7rem;
+        margin-bottom: 8px;
+        color: #0f172a;
+      }
+      .sub {
+        color: #64748b;
+        margin-bottom: 28px;
+      }
+      h2 {
+        font-size: 1.1rem;
+        margin: 26px 0 8px;
+        color: #0f172a;
+      }
+      p,
+      li {
+        color: #334155;
+      }
+      ul {
+        margin: 8px 0 0 20px;
+      }
+      strong {
+        color: #0f172a;
+      }
+      a {
+        color: #2563eb;
+      }
+      .footer {
+        margin-top: 28px;
+        font-size: 0.85rem;
+        color: #94a3b8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Privacy Policy</h1>
+      <p class="sub">Effective Date: <span id="date"></span></p>
+
+      <p>
+        This Privacy Policy explains how NoteFlow ("we", "our", or "us")
+        collects, uses, and protects your information when you use our mobile
+        application. By using NoteFlow, you agree to the practices described
+        below.
+      </p>
+
+      <h2>Information We Collect</h2>
+      <ul>
+        <li>
+          <strong>Account information:</strong> Your name and email address,
+          received from your sign-in provider (Clerk) when you create an
+          account.
+        </li>
+        <li>
+          <strong>Your content:</strong> The notes you create, edit, and delete
+          within the app, including any AI-generated summaries.
+        </li>
+        <li>
+          <strong>Usage data:</strong> Basic technical information such as
+          device type and app version, used only to deliver and improve the
+          service.
+        </li>
+      </ul>
+
+      <h2>How We Use Your Information</h2>
+      <ul>
+        <li>To create and maintain your account.</li>
+        <li>To store, sync, and display your notes.</li>
+        <li>
+          To generate AI summaries you request (your note content is sent to our
+          summarization service only for this purpose).
+        </li>
+        <li>To provide support and improve the app.</li>
+      </ul>
+
+      <h2>How We Share Your Information</h2>
+      <p>
+        We do not sell your personal information. We only share data with
+        trusted service providers strictly to operate the app, including:
+      </p>
+      <ul>
+        <li>
+          <strong>Clerk</strong> — for secure sign-in and account management.
+        </li>
+        <li>
+          <strong>PostgreSQL hosting provider</strong> — for storing your
+          account data and notes.
+        </li>
+        <li>
+          <strong>AI summarization provider (Groq via LangChain)</strong> —
+          solely to generate summaries you request.
+        </li>
+      </ul>
+
+      <h2>Data Security</h2>
+      <p>
+        Your notes are tied to your authenticated account and are only
+        accessible to you. We use industry-standard measures to protect your
+        data from unauthorized access, alteration, or loss.
+      </p>
+
+      <h2>Data Retention &amp; Deletion</h2>
+      <p>
+        We retain your data for as long as your account is active. You may
+        request deletion of your account and all associated data at any time —
+        see our
+        <a href="/Note-App/delete-account/">Account Deletion</a> page for
+        instructions.
+      </p>
+
+      <h2>Your Rights</h2>
+      <p>
+        You may request access to, correction of, or deletion of your personal
+        data by contacting us. You may also stop using the app and remove it
+        from your device at any time.
+      </p>
+
+      <h2>Children's Privacy</h2>
+      <p>
+        NoteFlow is not intended for children under the age of 13, and we do not
+        knowingly collect their personal information.
+      </p>
+
+      <h2>Changes to This Policy</h2>
+      <p>
+        We may update this Privacy Policy from time to time. We will post any
+        changes on this page, and the revised policy will apply to information
+        collected after the effective date.
+      </p>
+
+      <h2>Contact Us</h2>
+      <p>
+        If you have any questions about this Privacy Policy, please contact us
+        at
+        <a href="mailto:irfanmehmud140@gmail.com">irfanmehmud140@gmail.com</a>.
+      </p>
+
+      <p class="footer">
+        &copy; <span id="year"></span> NoteFlow. All rights reserved.
+      </p>
+    </div>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+      const d = new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+      document.getElementById("date").textContent = d;
+    </script>
+  </body>
+</html>

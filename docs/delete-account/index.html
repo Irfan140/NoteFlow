@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Deletion | NoteFlow</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+        background: #f7f9fc;
+        color: #1f2430;
+        line-height: 1.6;
+        padding: 40px 20px;
+      }
+      .container {
+        max-width: 720px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+      }
+      h1 {
+        font-size: 1.7rem;
+        margin-bottom: 8px;
+        color: #0f172a;
+      }
+      .sub {
+        color: #64748b;
+        margin-bottom: 28px;
+      }
+      h2 {
+        font-size: 1.1rem;
+        margin: 24px 0 8px;
+        color: #0f172a;
+      }
+      p,
+      li {
+        color: #334155;
+      }
+      ul {
+        margin: 8px 0 0 20px;
+      }
+      .note {
+        background: #eff6ff;
+        border-left: 4px solid #2563eb;
+        padding: 12px 16px;
+        border-radius: 6px;
+        margin-top: 24px;
+      }
+      .note strong {
+        color: #1e40af;
+      }
+      a {
+        color: #2563eb;
+      }
+      .footer {
+        margin-top: 28px;
+        font-size: 0.85rem;
+        color: #94a3b8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Delete Your NoteFlow Account</h1>
+      <p class="sub">
+        How to request permanent deletion of your account and data.
+      </p>
+
+      <h2>What data we store</h2>
+      <p>
+        When you use NoteFlow, we store the following information tied to your
+        account:
+      </p>
+      <ul>
+        <li>
+          Your name and email address (provided by your sign-in provider).
+        </li>
+        <li>
+          The notes you create, their content, and any AI-generated summaries.
+        </li>
+      </ul>
+
+      <h2>How to delete your account</h2>
+      <p>
+        NoteFlow does not currently offer a one-tap "Delete Account" button
+        inside the app. To request deletion of your account and all associated
+        data, please email us using the address associated with your account:
+      </p>
+      <p>
+        <strong>Email:</strong>
+        <a href="mailto:irfanmehmud140@gmail.com">irfanmehmud140@gmail.com</a>
+      </p>
+      <p>
+        In your request, include the email address you signed up with so we can
+        verify ownership.
+      </p>
+
+      <h2>What happens after you request deletion</h2>
+      <ul>
+        <li>
+          We will permanently delete your account and all your notes and
+          summaries from our servers.
+        </li>
+        <li>Deletion is permanent and cannot be undone once completed.</li>
+        <li>
+          We will confirm by email once the process is finished, typically
+          within 30 days.
+        </li>
+      </ul>
+
+      <div class="note">
+        <strong>Note:</strong> Even after account deletion, you may also delete
+        your sign-in identity directly through your account provider if you
+        signed up using a third-party service.
+      </div>
+
+      <p class="footer">
+        &copy; <span id="year"></span> NoteFlow. All rights reserved.
+      </p>
+    </div>
+
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
