@@ -1,3 +1,4 @@
 import "./workers/summary.worker";
+import { logger } from "./libs/logger";
 
-console.log("Summary worker started");
+logger.info("Summary worker started");

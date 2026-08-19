@@ -3,11 +3,7 @@ import { requireAuth } from "@clerk/express";
 
 export const clerkAuth = requireAuth();
 
-export const attachUserId = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const attachUserId = (req: Request, res: Response, next: NextFunction) => {
   // Clerk injects auth object
   const userId = (req as any).auth?.userId;
 

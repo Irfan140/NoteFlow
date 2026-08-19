@@ -1,5 +1,5 @@
 import { Queue } from "bullmq";
-import { createRedisConnection } from "../config/redis";
+import { createRedisConnection } from "../libs/redis";
 
 export const SUMMARY_QUEUE_NAME = "note-summaries";
 

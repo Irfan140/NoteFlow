@@ -1,4 +1,4 @@
-import { prisma } from "../config/db.ts";
+import { prisma } from "../libs/prisma.ts";
 import type { CreateNote, UpdateNote } from "../types/note.ts";
 
 export const createNote = async (userId: string, data: CreateNote) => {
@@ -26,11 +26,7 @@ export const getNoteByNoteId = async (noteId: string, userId: string) => {
   });
 };
 
-export const updateNote = async (
-  noteId: string,
-  userId: string,
-  data: UpdateNote,
-) => {
+export const updateNote = async (noteId: string, userId: string, data: UpdateNote) => {
   return await prisma.note.update({
     where: {
       id: noteId,
@@ -49,11 +45,7 @@ export const deleteNote = async (noteId: string, userId: string) => {
   });
 };
 
-export const saveSummary = async (
-  noteId: string,
-  userId: string,
-  summary: string,
-) => {
+export const saveSummary = async (noteId: string, userId: string, summary: string) => {
   const result = await prisma.note.updateMany({
     where: { id: noteId, userId },
     data: { summary },

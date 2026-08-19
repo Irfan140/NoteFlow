@@ -1,6 +1,7 @@
 import { env } from "./config/env";
 import app from "./app";
+import { logger } from "./libs/logger";
 
 app.listen(env.PORT, "0.0.0.0", () => {
-  console.log(`Server running on http://localhost:${env.PORT}`);
+  logger.info({ port: env.PORT }, "Server started");
 });
