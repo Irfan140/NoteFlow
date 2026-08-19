@@ -6,9 +6,7 @@ config({
 });
 
 const envSchema = z.object({
-  NODE_ENV: z
-    .enum(["development", "production", "test"])
-    .default("development"),
+  NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
 
   PORT: z.coerce.number().default(5000),
 
@@ -18,6 +16,7 @@ const envSchema = z.object({
   CLERK_PUBLISHABLE_KEY: z.string().min(1),
 
   GROQ_API_KEY: z.string().min(1),
+  MODEL_NAME: z.string().min(1).default("openai/gpt-oss-120b"),
 
   REDIS_URL: z.string().url().default("redis://localhost:6379"),
 
@@ -26,10 +25,7 @@ const envSchema = z.object({
     .optional()
     .default("false")
     .transform((value) => value.toLowerCase() === "true"),
-  LANGSMITH_ENDPOINT: z
-    .string()
-    .url()
-    .default("https://api.smith.langchain.com"),
+  LANGSMITH_ENDPOINT: z.string().url().default("https://api.smith.langchain.com"),
   LANGSMITH_API_KEY: z.string().min(1).optional(),
   LANGSMITH_PROJECT: z.string().min(1).default("NoteFlow"),
 });

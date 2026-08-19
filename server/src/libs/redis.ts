@@ -1,5 +1,5 @@
 import IORedis from "ioredis";
-import { env } from "./env";
+import { env } from "../config/env";
 
 export const createRedisConnection = () =>
   new IORedis(env.REDIS_URL, {

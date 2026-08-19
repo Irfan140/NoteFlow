@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import * as noteService from "../services/note.service";
 import { enqueueSummary, summaryQueue } from "../queues/summary.queue";
+import { logger } from "../libs/logger";
 
 export const createNote = async (req: Request, res: Response) => {
   try {
@@ -31,8 +32,7 @@ export const getNoteByNoteId = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).userId;
     const noteId = req.params.noteId;
-    if (!noteId)
-      return res.status(400).json({ error: "Missing noteId parameter" });
+    if (!noteId) return res.status(400).json({ error: "Missing noteId parameter" });
 
     const note = await noteService.getNoteByNoteId(noteId, userId);
     if (!note) return res.status(404).json({ error: "Note not found" });
@@ -47,8 +47,7 @@ export const updateNote = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).userId;
     const noteId = req.params.noteId;
-    if (!noteId)
-      return res.status(400).json({ error: "Missing noteId parameter" });
+    if (!noteId) return res.status(400).json({ error: "Missing noteId parameter" });
     const data = req.body;
 
     //  First check if note exists
@@ -66,8 +65,7 @@ export const deleteNote = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).userId;
     const noteId = req.params.noteId;
-    if (!noteId)
-      return res.status(400).json({ error: "Missing noteId parameter" });
+    if (!noteId) return res.status(400).json({ error: "Missing noteId parameter" });
 
     const existing = await noteService.getNoteByNoteId(noteId, userId);
     if (!existing) return res.status(404).json({ error: "Note not found" });
@@ -97,9 +95,7 @@ export const summarizeNote = async (req: Request, res: Response) => {
 
     // Check if note has content
     if (!note.content || note.content.trim().length < 10) {
-      return res
-        .status(400)
-        .json({ error: "Note content is too short to summarize" });
+      return res.status(400).json({ error: "Note content is too short to summarize" });
     }
 
     const job = await enqueueSummary({
@@ -110,7 +106,7 @@ export const summarizeNote = async (req: Request, res: Response) => {
 
     res.status(202).json({ jobId: job.id, status: "queued" });
   } catch (error: any) {
-    console.error("Summarization error:", error);
+    logger.error({ err: error, noteId: req.params.noteId }, "Summarization error");
     res.status(500).json({
       error: "Failed to summarize note",
       message: error.message,
@@ -156,7 +152,10 @@ export const getSummaryStatus = async (req: Request, res: Response) => {
       status: state === "active" ? "processing" : "queued",
     });
   } catch (error) {
-    console.error("Summary status error:", error);
+    logger.error(
+      { err: error, noteId: req.params.noteId, jobId: req.params.jobId },
+      "Summary status error",
+    );
     return res.status(500).json({ error: "Failed to fetch summary status" });
   }
 };

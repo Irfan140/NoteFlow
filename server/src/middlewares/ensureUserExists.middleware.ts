@@ -1,5 +1,6 @@
 import { clerkClient } from "@clerk/express";
-import { prisma } from "../config/db";
+import { prisma } from "../libs/prisma";
+import { logger } from "../libs/logger";
 
 export const ensureUserExists = async (req: any, res: any, next: any) => {
   try {
@@ -22,7 +23,7 @@ export const ensureUserExists = async (req: any, res: any, next: any) => {
 
     // Ensure required fields present
     if (!email) {
-      console.error("ensureUserExists: Clerk user has no email", { userId });
+      logger.warn({ userId }, "Clerk user has no email");
       return res.status(400).json({ error: "Clerk user has no email address" });
     }
 
@@ -38,7 +39,7 @@ export const ensureUserExists = async (req: any, res: any, next: any) => {
 
     next();
   } catch (err) {
-    console.error("ensureUserExists middleware error:", err);
+    logger.error({ err }, "ensureUserExists middleware failed");
     return res.status(500).json({ error: "ensureUserExists failed" });
   }
 };

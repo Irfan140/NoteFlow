@@ -17,7 +17,7 @@ Note:
 );
 
 const model = new ChatGroq({
-  model: "llama-3.3-70b-versatile",
+  model: env.MODEL_NAME,
   temperature: 0,
   apiKey: env.GROQ_API_KEY,
 });
