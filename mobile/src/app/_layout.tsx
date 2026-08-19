@@ -1,27 +1,21 @@
-import { ClerkProvider } from "@clerk/clerk-expo";
-import { tokenCache } from "@clerk/clerk-expo/token-cache";
-import { useAuth } from "@clerk/clerk-expo";
+import { AuthProvider } from "../state/auth";
 import { Slot } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useAuth } from "../state/auth";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { env } from "../config/env";
 
 export default function RootLayout() {
   return (
-    <ClerkProvider
-      publishableKey={env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
-      tokenCache={tokenCache}
-    >
+    <AuthProvider>
       <StatusBar hidden />
       <AppRoutes />
-    </ClerkProvider>
+    </AuthProvider>
   );
 }
 
 function AppRoutes() {
   const { isLoaded } = useAuth();
 
-  // Do not mount a route until Clerk has restored the saved session.
   if (!isLoaded) {
     return (
       <View style={styles.loadingScreen}>

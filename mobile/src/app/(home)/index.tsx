@@ -1,36 +1,24 @@
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  ActivityIndicator,
-  Alert,
-  StyleSheet,
-  Pressable,
+  View, Text, TouchableOpacity, FlatList, ActivityIndicator,
+  Alert, StyleSheet, Pressable,
 } from "react-native";
 import { useEffect, useState } from "react";
-import { useApi } from "../../lib/api";
+import api from "../../libs/api";
 import { Link, useRouter } from "expo-router";
-import { useAuth, useUser } from "@clerk/clerk-expo";
+import { useAuth } from "../../state/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { notesSchema, type Note } from "../../lib/schemas/note";
+import { notesSchema, type Note } from "../../schemas/note";
 import { colors, shadows } from "../../theme/colors";
 
 export default function HomeScreen() {
-  const api = useApi();
   const router = useRouter();
-  const { signOut } = useAuth();
-  const { user } = useUser();
+  const { signOut, user } = useAuth();
 
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
   const [logoutLoading, setLogoutLoading] = useState(false);
 
-  const displayName =
-    user?.fullName ||
-    user?.firstName ||
-    user?.emailAddresses?.[0]?.emailAddress?.split("@")[0] ||
-    "User";
+  const displayName = user?.name || user?.email?.split("@")[0] || "User";
 
   const loadNotes = async () => {
     try {

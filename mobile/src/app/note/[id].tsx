@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
-import { useApi } from "../../lib/api";
+import api from "../../libs/api";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   noteSchema,
@@ -19,12 +19,11 @@ import {
   summaryJobResponseSchema,
   summaryStatusResponseSchema,
   type Note,
-} from "../../lib/schemas/note";
+} from "../../schemas/note";
 import { colors, shadows } from "../../theme/colors";
 
 export default function NoteDetail() {
   const { id } = useLocalSearchParams();
-  const api = useApi();
   const router = useRouter();
   const noteId = routeIdSchema.parse(id);
 

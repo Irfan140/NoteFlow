@@ -5,10 +5,6 @@ const envSchema = z.object({
     .string()
     .trim()
     .url("EXPO_PUBLIC_API_URL must be a valid URL"),
-  EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: z
-    .string()
-    .trim()
-    .min(1, "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY is required"),
 });
 
 const parsed = envSchema.safeParse(process.env);

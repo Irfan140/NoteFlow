@@ -16,7 +16,6 @@
     "prod:build": "eas build --profile production --platform android"
   },
   "dependencies": {
-    "@clerk/clerk-expo": "^2.19.31",
     "@react-navigation/bottom-tabs": "^7.15.5",
     "@react-navigation/elements": "^2.9.10",
     "@react-navigation/native": "^7.1.33",

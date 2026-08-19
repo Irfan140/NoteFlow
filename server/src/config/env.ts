@@ -12,8 +12,10 @@ const envSchema = z.object({
 
   DATABASE_URL: z.string().url(),
 
-  CLERK_SECRET_KEY: z.string().min(1),
-  CLERK_PUBLISHABLE_KEY: z.string().min(1),
+  JWT_SECRET: z.string().min(1),
+  JWT_REFRESH_SECRET: z.string().min(1),
+  ACCESS_TOKEN_EXPIRY: z.string().default("15m"),
+  REFRESH_TOKEN_EXPIRY: z.string().default("7d"),
 
   GROQ_API_KEY: z.string().min(1),
   MODEL_NAME: z.string().min(1).default("openai/gpt-oss-120b"),

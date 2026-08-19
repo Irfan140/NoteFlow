@@ -1,54 +1,43 @@
 import { useState } from "react";
 import {
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  StyleSheet,
+  Text, TextInput, TouchableOpacity, View, StyleSheet,
 } from "react-native";
-import { useSignUp } from "@clerk/clerk-expo";
+import { useAuth } from "../../state/auth";
 import { Link, useRouter } from "expo-router";
-import {
-  signUpSchema,
-  verificationCodeSchemaForm,
-} from "../../lib/schemas/auth";
+import { signUpSchema } from "../../schemas/auth";
 import { colors, shadows } from "../../theme/colors";
 
 export default function SignUpScreen() {
-  const { isLoaded, signUp, setActive } = useSignUp();
+  const { signUp } = useAuth();
   const router = useRouter();
 
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
-  const [pendingVerification, setPendingVerification] = useState(false);
-  const [code, setCode] = useState("");
+  const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
   const [friendlyError, setFriendlyError] = useState("");
 
   const onSignUpPress = async () => {
-    if (!isLoaded) return;
+    const parsed = signUpSchema.safeParse({ emailAddress, password });
+    if (!parsed.success) {
+      setFriendlyError(parsed.error.issues[0]?.message || "Please check your input");
+      return;
+    }
 
+    if (!name.trim()) {
+      setFriendlyError("Name is required");
+      return;
+    }
+
+    setLoading(true);
     try {
-      const parsed = signUpSchema.safeParse({ emailAddress, password });
-      if (!parsed.success) {
-        setFriendlyError(
-          parsed.error.issues[0]?.message || "Please check your input",
-        );
-        return;
-      }
-
-      await signUp.create({
-        emailAddress: parsed.data.emailAddress,
-        password: parsed.data.password,
-      });
-
-      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-      setPendingVerification(true);
-      setFriendlyError("");
+      await signUp(parsed.data.emailAddress, parsed.data.password, name.trim());
+      router.replace("/");
     } catch (err: any) {
-      console.error(JSON.stringify(err, null, 2));
-      setFriendlyError(
-        err?.errors?.[0]?.message || "Something went wrong. Please try again.",
-      );
+      const message = err?.response?.data?.error || err?.message || "Something went wrong";
+      setFriendlyError(message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -81,36 +70,6 @@ export default function SignUpScreen() {
     }
   };
 
-  if (pendingVerification) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.card}>
-          <Text style={styles.kicker}>Verify email</Text>
-          <Text style={styles.title}>Enter code</Text>
-          <Text style={styles.subText}>
-            We sent a one-time code to your inbox.
-          </Text>
-
-          <TextInput
-            value={code}
-            placeholder="Enter your verification code"
-            placeholderTextColor="#94a3b8"
-            onChangeText={(code) => setCode(code)}
-            style={styles.input}
-          />
-
-          {friendlyError !== "" && (
-            <Text style={styles.errorText}>{friendlyError}</Text>
-          )}
-
-          <TouchableOpacity onPress={onVerifyPress} style={styles.button}>
-            <Text style={styles.buttonText}>Verify</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
       <View style={styles.card}>
@@ -124,11 +83,20 @@ export default function SignUpScreen() {
         </View>
 
         <TextInput
+          autoCapitalize="words"
+          value={name}
+          placeholder="Enter name"
+          placeholderTextColor="#94a3b8"
+          onChangeText={setName}
+          style={styles.input}
+        />
+
+        <TextInput
           autoCapitalize="none"
           value={emailAddress}
           placeholder="Enter email"
           placeholderTextColor="#94a3b8"
-          onChangeText={(email) => setEmailAddress(email)}
+          onChangeText={setEmailAddress}
           style={styles.input}
         />
 
@@ -137,7 +105,7 @@ export default function SignUpScreen() {
           placeholder="Enter password"
           placeholderTextColor="#94a3b8"
           secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
+          onChangeText={setPassword}
           style={styles.input}
         />
 
@@ -145,8 +113,12 @@ export default function SignUpScreen() {
           <Text style={styles.errorText}>{friendlyError}</Text>
         )}
 
-        <TouchableOpacity onPress={onSignUpPress} style={styles.button}>
-          <Text style={styles.buttonText}>Continue &gt;</Text>
+        <TouchableOpacity
+          onPress={onSignUpPress}
+          disabled={loading}
+          style={[styles.button, loading && { opacity: 0.7 }]}
+        >
+          <Text style={styles.buttonText}>{loading ? "Creating..." : "Continue >"}</Text>
         </TouchableOpacity>
 
         <View style={styles.footerRow}>
